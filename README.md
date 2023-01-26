@@ -1,8 +1,11 @@
 # Artifical Replay
 
-This code implements and evaluates algorithms for the paper Artificial Replay: A Meta-Algorithm for Harnessing Historical Data in Bandits. In this paper we introduce Artificial Replay, a wrapper algorithm to most efficiently integrate historical data into arbitrary multi-armed bandit algorithms that exhibit independence of irrelevant data (IIData), overcoming spurious data and imbalanced data coverage.
+Siddhartha Banerjee, Sean R. Sinclair, Milind Tambe, Lily Xu, Christina Lee Yu
 
-We implement UCB-based algorithms using both fixed discretization and adaptive discretization for combinatorial bandits with continuous resource allocation (CMAB-CRA). We include a number of simulation environments including a quadratic function, piecewise-linear, and one based on real poaching data in Uganda. This library also implements and compares against a variety of baselines.
+This code implements and evaluates algorithms for the paper [Artificial Replay: A Meta-Algorithm for Harnessing Historical Data in Bandits](https://arxiv.org/abs/2210.00025). In this paper we introduce Artificial Replay, a wrapper algorithm to most efficiently integrate historical data into arbitrary multi-armed bandit algorithms that exhibit independence of irrelevant data (IIData), overcoming spurious data and imbalanced data coverage.
+
+For **K-armed bandits**, we include UCB, Thompson sampling, and IDS, and provide versions with the Artificial Replay wrapper for each approach. For **combinatorial bandits with continuous resource allocation** (CMAB-CRA), we implement UCB-based algorithms using both fixed discretization and adaptive discretization. We include a number of **simulation environments** including a quadratic function, piecewise-linear, and one based on real poaching data in Uganda. 
+
 
 ```
 @inproceedings{banerjee2023artificial,
@@ -29,30 +32,42 @@ python main.py
 
 ## Files
 
-In the `./cmab_model` directory:
-- `main.py` - driver
-- `environment.py`
-- for learning and setting up wildlife environment from real-world data
-- `preprocess.py` -
-- `get_data.py` -
-- `learn_reward.py` -
-- `algorithms/` - directory with implementation of algorithms
-- `algorithm.py`
-- `fixed_artificial_replay.py`
-- `fixed_historical.py`
-- `fixed_discretization.py`
-- `adaptive_artificial_replay.py`
-- `adaptive_historical.py`
-- `adaptive_discretization.py`
-- `regression.py`
-- `algorithms/utils/` - general helper functionality
-- `bounds_utils.py`
-- `common.py`
-- `tree.py`
+### CMAB-CRA
+CMAB-CRA (continuous combinatoiral bandits), with both fixed and adaptive discretization.
 
-For `./finite_armed_model`
-- `main.py` - driver
-- `k_armed.py` - environment class and algorithms
+In the `./cmab_model` directory:
+- `main.py` - driver to run experiments. To change between fixed and adaptive discretization, change which items are selected in `algo_list`
+- `environment.py` - define generic environment and PWL, Quadratic, Random, and Uganda settings
+- `algorithms/` - implementation of algorithms
+    - `./utils/` - general helper functionality. Contains `tree.py` tree implementation for adaptive discretization, `bounds_utils.py` for checking discretization region bounds, and `common.py` with optimization and confidence radius implementation
+    - `./algorithm.py` - generic algorithm class
+    - `./fixed_artificial_replay.py` - Artificial Replay wrapper class with fixed discretization
+    - `./fixed_historical.py` - Full Start with fixed discretization
+    - `./fixed_discretization.py` - fixed discretization with no historical data (Ignorant)
+    - `./adaptive_artificial_replay.py` - Artificial Replay wrapper class with adaptive discretization
+    - `./adaptive_historical.py` - Full Start with adaptive discretization
+    - `./adaptive_discretization.py` - adaptive discretization with no historical data (Ignorant)
+    - `./regression.py` - Regressor, which trains a neural network on the historical data
+
+Poaching data is not included due to the sensitive nature of the data.
+
+### K-armed bandits
+Finite K-armed bandits.
+
+In the `./finite_armed_model` directory:
+- `main.py` - driver to run experiments for the finite K-armed bandit
+- `k_armed.py` - environment class for K-armed bandits and algorithms
+- `common.py` - helper functionality
+- `algorithms/` - implementation of algorithms
+    - `./algorithm.py` - generic class for algorithms
+    - `./common.py` - helper functionality
+    - `./online_wrapper.py` - generic wrapper class for the Artificial Replay meta-algorithm
+    - `./ids.py` - information-directed sampling (IDS)
+    - `./thompson_sampling.py` - Thompson sampling (TS)
+    - `./ucb.py` - UCB
+    - `./historical_ids.py` - information-directed sampling (IDS) with Full Start
+    - `./historical_thompson_sampling.py` - Thompson sampling (TS) with Full Start
+    - `./historical_ucb.py` - UCB with Full Start
 
 
 
